@@ -1,0 +1,195 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ * Google GS101 Slider2-specific audio device tree source
+ *
+ * Copyright (c) 2020 Google, LLC
+ *		https://www.google.com
+ *
+*/
+
+#include <dt-bindings/pinctrl/samsung.h>
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/sound/google-aoc.h>
+
+&max98357a_hac {
+	status = "okay";
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&hac_amp_en>;
+
+	sdmode-gpios = <&gpp8 3 0>;
+};
+
+&dai_be_tdm0_rx {
+	codec {
+		sound-dai = <&cs35l41_l 0>,
+			<&cs35l41_r 0>;
+	};
+};
+
+&dai_be_tdm0_tx {
+	codec {
+		sound-dai = <&cs35l41_l 0>,
+			<&cs35l41_r 0>;
+	};
+};
+
+&aoc_snd_card {
+	clks {
+		sys {
+			sys@cs35l41_l {
+				comp = <&cs35l41_l>;
+				src = "BCLK";
+				/* clk id */
+				id = <0>;
+				/* clk source */
+				srcid = <0>;
+				/* in clk multiple */
+				in_mul = <1>;
+				/* out clk multiple */
+				out_mul = <1>;
+			};
+
+			sys@cs35l41_r {
+				comp = <&cs35l41_r>;
+				src = "BCLK";
+				/* clk id */
+				id = <0>;
+				/* clk source */
+				srcid = <0>;
+				/* in clk multiple */
+				in_mul = <1>;
+				/* out clk multiple */
+				out_mul = <1>;
+			};
+		};
+	};
+};
+
+/* GPIO_ALIVE */
+&pinctrl_0 {
+	hapt_amp_irq: hapt-amp-irq {
+		samsung,pins = "gpa9-4"; /* XEINT_24 */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+	};
+
+	cs35l41_r_irq: cs35l41-r-irq {
+		samsung,pins = "gpa9-6"; /* XEINT_26 */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+	};
+};
+
+/* GPIO_FAR_ALIVE */
+&pinctrl_1 {
+	cs35l41_l_irq: cs35l41-l-irq {
+		samsung,pins = "gpa6-3"; /* XEINT_3 */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+	};
+
+	hs_amp_irq: hs-amp-irq {
+		samsung,pins = "gpa6-5"; /* XEINT_5 */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+	};
+};
+
+/* GPIO_PERIC0 */
+&pinctrl_4 {
+	cs35l41_l_rst: cs35l41-l-rst {
+		samsung,pins = "gpp16-3"; /* XAPC_USI8_CTSN_CSN */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+	};
+
+	hac_amp_en: hac-amp-en {
+		samsung,pins = "gpp8-3"; /* XAPC_USI4_CTSN_CSN */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+	};
+
+	cs35l41_cs2: cs35l41-cs2 {
+		samsung,pins = "gpp1-0";
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+	};
+};
+
+/* GPIO_PERIC1 */
+&pinctrl_5 {
+	hapt_amp_rst: hapt-amp-rst {
+		samsung,pins = "gpp24-0"; /* XAPC_GPIO6 */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+	};
+
+	hapt_amp_trig: hapt-amp-trig {
+		samsung,pins = "gpp24-3"; /* XAPC_GPIO9 */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+	};
+
+	cs35l41_r_rst: cs35l41-r-rst {
+		samsung,pins = "gpp23-7"; /* XAPC_USI12_CTSN_CSN */
+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+		samsung,pin-con-pdn = <EXYNOS_PIN_PDN_PREV>;
+		samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+	};
+
+	cs35l41_miso: cs35l41-miso {
+		samsung,pins = "gpp25-2";
+		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
+	};
+
+	cs35l41_mosi: cs35l41-mosi {
+		samsung,pins = "gpp25-1";
+		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
+	};
+
+	cs35l41_clk: cs35l41-clk {
+		samsung,pins = "gpp25-0";
+		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
+	};
+};
+
+&hsi2c_8 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&hsi2c8_bus>;
+
+	clock-frequency = <400000>;
+
+	headphone_amp: rt5682@1a {
+		#sound-dai-cells = <1>;
+		compatible = "realtek,rt5682i";
+		reg = <0x1a>;
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&hs_amp_irq>;
+
+		interrupt-parent = <&gpa6>;
+		interrupts = <5 0 0>;
+
+		realtek,dmic1-data-pin = <0>;
+		realtek,jd-src = <2>;
+
+		status = "disabled";
+	};
+
+	cs40l25a_haptics: cs40l25a@43 {
+		compatible = "cirrus,cs40l25a";
+		reg = <0x43>;
+		dev-name = "cs40l25a";
